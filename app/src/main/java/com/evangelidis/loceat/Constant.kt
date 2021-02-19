@@ -4,6 +4,8 @@ object Constant {
 
     const val PREFS_USER_LOCATION_PERMISSION = "PREFS_USER_LOCATION_PERMISSION"
 
+    const val BASE_URL = "https://api.foursquare.com/v2/"
+
     const val LOCATION_REQUEST = 100
     const val GPS_REQUEST = 101
 

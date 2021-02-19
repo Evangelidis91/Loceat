@@ -15,6 +15,8 @@ import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.evangelidis.loceat.Constant
+import com.evangelidis.loceat.Constant.DEFAULT_LATITUDE
+import com.evangelidis.loceat.Constant.DEFAULT_LONGITUDE
 import com.evangelidis.loceat.Constant.GPS_REQUEST
 import com.evangelidis.loceat.Constant.LOCATION_REQUEST
 import com.evangelidis.loceat.base.BaseActivity
@@ -22,19 +24,22 @@ import com.evangelidis.loceat.base.BaseContract
 import com.evangelidis.loceat.base.BasePresenter
 import com.evangelidis.loceat.databinding.ActivityLocationBinding
 import com.evangelidis.loceat.extensions.show
+import com.evangelidis.loceat.restaurants.RestaurantsListActivity
 import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.android.synthetic.main.activity_location.*
 import java.util.*
 
 
-class LocationActivity :  BaseActivity<BaseContract.View, BasePresenter<BaseContract.View>>() {
+class LocationActivity : BaseActivity<BaseContract.View, BasePresenter<BaseContract.View>>() {
 
     private lateinit var locationViewModel: LocationViewModel
     private var isGPSEnabled = false
 
-    private val binding : ActivityLocationBinding by lazy{ActivityLocationBinding.inflate(
-        layoutInflater
-    )}
+    private val binding: ActivityLocationBinding by lazy {
+        ActivityLocationBinding.inflate(
+            layoutInflater
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,9 +82,7 @@ class LocationActivity :  BaseActivity<BaseContract.View, BasePresenter<BaseCont
 
     private fun invokeLocationAction() {
         when {
-//            !isGPSEnabled -> {
-//                location.text = "Athens"
-//            }
+            !isGPSEnabled -> setLocation(DEFAULT_LATITUDE, DEFAULT_LONGITUDE)
 
             isPermissionsGranted() -> startLocationUpdate()
 
@@ -96,15 +99,23 @@ class LocationActivity :  BaseActivity<BaseContract.View, BasePresenter<BaseCont
 
     private fun startLocationUpdate() {
         locationViewModel.getLocationData().observe(this, Observer {
-            val aLocale: Locale = Locale.Builder().setLanguage("el").build()
-            val geocoder = Geocoder(this, aLocale)
-            val addresses: List<Address> = geocoder.getFromLocation(it.latitude, it.longitude, 1)
-            binding.userAddress.text = addresses.first().getAddressLine(0)
-
-            presenter.view?.hideLoader()
-            binding.map.show()
-            binding.map.addMarker(it.latitude, it.longitude)
+            setLocation(it.latitude, it.longitude)
         })
+    }
+
+    private fun setLocation(latitude: Double, longitude: Double) {
+        val aLocale: Locale = Locale.Builder().setLanguage("el").build()
+        val geocoder = Geocoder(this, aLocale)
+        val addresses: List<Address> = geocoder.getFromLocation(latitude, longitude, 1)
+        binding.userAddress.text = addresses.first().getAddressLine(0)
+        binding.map.addMarker(latitude, longitude)
+
+        binding.continueText.setOnClickListener {
+            startActivity(RestaurantsListActivity.createIntent(this, latitude, longitude))
+        }
+
+        binding.map.show()
+        presenter.view?.hideLoader()
     }
 
     private fun isPermissionsGranted() =
@@ -139,7 +150,7 @@ class LocationActivity :  BaseActivity<BaseContract.View, BasePresenter<BaseCont
                 if (isPermissionsGranted()) {
                     invokeLocationAction()
                 } else {
-                    binding.userAddress.text = "Athens"
+                    setLocation(DEFAULT_LATITUDE, DEFAULT_LONGITUDE)
                 }
             }
         }

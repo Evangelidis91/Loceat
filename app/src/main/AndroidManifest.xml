@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Loceat">
-        <activity android:name=".base.BaseActivity"></activity>
+        <activity android:name=".restaurants.RestaurantsListActivity"></activity>
+        <activity android:name=".base.BaseActivity" />
         <activity android:name=".location.LocationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +28,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDANyyhe9YYs3MUs5EydYlfkIUoPk6yg68" />
-
     </application>
 
 </manifest>

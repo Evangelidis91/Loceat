@@ -35,11 +35,7 @@ class LocationActivity : BaseActivity<BaseContract.View, BasePresenter<BaseContr
     private lateinit var locationViewModel: LocationViewModel
     private var isGPSEnabled = false
 
-    private val binding: ActivityLocationBinding by lazy {
-        ActivityLocationBinding.inflate(
-            layoutInflater
-        )
-    }
+    private val binding: ActivityLocationBinding by lazy { ActivityLocationBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,12 +105,11 @@ class LocationActivity : BaseActivity<BaseContract.View, BasePresenter<BaseContr
         val addresses: List<Address> = geocoder.getFromLocation(latitude, longitude, 1)
         binding.userAddress.text = addresses.first().getAddressLine(0)
         binding.map.addMarker(latitude, longitude)
-
         binding.continueText.setOnClickListener {
             startActivity(RestaurantsListActivity.createIntent(this, latitude, longitude))
         }
-
         binding.map.show()
+
         presenter.view?.hideLoader()
     }
 

@@ -1,15 +1,16 @@
 package com.evangelidis.loceat.view
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
+import android.view.View
 import android.widget.FrameLayout
+import android.widget.RelativeLayout
 import androidx.annotation.AttrRes
 import androidx.annotation.DimenRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.evangelidis.loceat.Constant.GOOGLE_MAP_ZOOM_LEVEL
 import com.evangelidis.loceat.R
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -37,11 +38,7 @@ class MapView : FrameLayout {
         init(context, attrs)
     }
 
-    constructor(context: Context, attrs: AttributeSet?, @AttrRes defStyleAttr: Int) : super(
-        context,
-        attrs,
-        defStyleAttr
-    ) {
+    constructor(context: Context, attrs: AttributeSet?, @AttrRes defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         init(context, attrs)
     }
 
@@ -66,6 +63,7 @@ class MapView : FrameLayout {
         }
     }
 
+    @SuppressLint("MissingPermission")
     fun addMarker(lat: Double, lng: Double) {
         val position = LatLng(lat, lng)
         map?.let {
@@ -75,6 +73,8 @@ class MapView : FrameLayout {
                         bitmapDescriptorFromVector(context, R.drawable.icn_location_ping)
                     )
                 )
+                isMyLocationEnabled = true
+                uiSettings.isMyLocationButtonEnabled = true
                 moveCamera(CameraUpdateFactory.newLatLng(position))
                 animateCamera(CameraUpdateFactory.newLatLngZoom(position, GOOGLE_MAP_ZOOM_LEVEL))
             }

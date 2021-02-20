@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Gravity
+import android.view.MenuItem
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.evangelidis.loceat.Constant
@@ -34,7 +36,6 @@ class RestaurantsListActivity : BaseActivity<RestaurantsContract.View, Restauran
     private val binding: ActivityRestaurantsListBinding by lazy { ActivityRestaurantsListBinding.inflate(layoutInflater) }
     private val adapter: CategoriesAdapter by lazy { CategoriesAdapter(this) }
 
-    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
@@ -50,33 +51,44 @@ class RestaurantsListActivity : BaseActivity<RestaurantsContract.View, Restauran
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        binding.collapsingToolbar.setExpandedTitleTextAppearance(R.style.collapsingToolbarLayoutTitleColor)
+        binding.collapsingToolbar.setExpandedTitleTextAppearance(R.style.extendedToolbar)
         binding.collapsingToolbar.setCollapsedTitleTextAppearance(R.style.collapsingToolbarLayoutTitleColor)
 
         presenter.loadRestaurants()
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
 
     override fun setRecyclerView(newsList: MutableList<Venue>) {
-        val f = newsList
-        val categories: MutableList<Category> = mutableListOf()
+//        val f = newsList
+//        val categories: MutableList<Category> = mutableListOf()
+//
+//        for (venue in f) {
+//            for (category in venue.categories) {
+//                if (!categories.contains(category)) {
+//                    categories.add(category)
+//                }
+//            }
+//        }
+//
+//        val y = categories
+//        println(y)
+//
+//        val i = newsList.groupBy { it.categories.first().name }
+//        println(i)
 
-        for (venue in f) {
-            for (category in venue.categories) {
-                if (!categories.contains(category)) {
-                    categories.add(category)
-                }
-            }
-        }
-
-        val y = categories
-        println(y)
-
-        val i = newsList.groupBy { it.categories.first().name }
-        println(i)
-
+        newsList.sortBy { it.location?.distance }
         val grouped = newsList.groupBy { it.categories }
         val listToDeploy: MutableList<FormattedCategory> = mutableListOf()
+        listToDeploy.add(FormattedCategory(type = "Space", venue = null, category = null))
         for (group in grouped) {
             listToDeploy.add(FormattedCategory(type = "Title", venue = null, category = group.key.first()))
             for (venue in group.value) {

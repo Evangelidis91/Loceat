@@ -5,7 +5,7 @@ import com.evangelidis.loceat.restaurants.model.CategoriesViewType
 import com.evangelidis.loceat.restaurants.model.FormattedCategory
 
 interface CategoriesAdapterCallback {
-    fun performAction(action: String)
+    fun navigateToVenue(venueId: String)
 }
 
 interface CategoriesDelegateAdapter {

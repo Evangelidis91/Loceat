@@ -6,13 +6,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class ApiModule {
 
-    companion object{
+    companion object {
+
         val client: Retrofit
-        get() {
-            return Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(BASE_URL)
-                .build()
-        }
+            get() {
+                return Retrofit.Builder()
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .baseUrl(BASE_URL)
+                    .build()
+            }
     }
 }

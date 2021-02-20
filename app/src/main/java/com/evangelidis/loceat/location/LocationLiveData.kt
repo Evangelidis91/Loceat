@@ -1,10 +1,9 @@
-package com.evangelidis.loceat
+package com.evangelidis.loceat.location
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Location
 import androidx.lifecycle.LiveData
-import com.evangelidis.loceat.location.LocationModel
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -18,7 +17,6 @@ class LocationLiveData(context: Context) : LiveData<LocationModel>() {
         super.onInactive()
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
-
 
     @SuppressLint("MissingPermission")
     override fun onActive() {
@@ -51,13 +49,11 @@ class LocationLiveData(context: Context) : LiveData<LocationModel>() {
     }
 
     private fun setLocationData(location: Location) {
-        if (location != null) {
-            value = LocationModel(
-                longitude = location.longitude,
-                latitude = location.latitude
-            )
-            fusedLocationClient.removeLocationUpdates(locationCallback)
-        }
+        value = LocationModel(
+            longitude = location.longitude,
+            latitude = location.latitude
+        )
+        fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 
     companion object {

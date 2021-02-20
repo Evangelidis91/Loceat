@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">Loceat</string>
+
+    <string name="distance_format">{KM} km</string>
+    <string name="error_message">Κάτι δεν πήγε καλά στην εύρεση εστιατορίων. Παρακαλώ δοκιμάστε ξανά.</string>
+    <string name="tracking_location_text">Γίνεται εντοπισμός….</string>
+    <string name="loading_venues_text">Φόρτωση εστιατορίων….</string>
+    <string name="navigate_to_venue_toast">Μετάβαση στο εστιατόριο {ID}</string>
+    <string name="address_text">Διεύθυνση:</string>
+    <string name="continue_button_text">Συνέχεια</string>
+    <string name="unknown_location_text">Άγνωστη τοποθεσία</string>
+
 </resources>

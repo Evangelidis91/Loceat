@@ -8,10 +8,10 @@ import com.evangelidis.loceat.extensions.show
 import com.evangelidis.loceat.R
 import com.evangelidis.loceat.databinding.ActivityBaseBinding
 
-abstract class BaseActivity <in V : BaseContract.View, out P : BaseContract.Presenter<V>> : AppCompatActivity(), BaseContract.View {
+abstract class BaseActivity<in V : BaseContract.View, out P : BaseContract.Presenter<V>> : AppCompatActivity(), BaseContract.View {
 
     private val baseBinding: ActivityBaseBinding by lazy { ActivityBaseBinding.inflate(layoutInflater) }
-    val presenter: P by lazy { createPresenter() }
+    protected val presenter: P by lazy { createPresenter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +27,8 @@ abstract class BaseActivity <in V : BaseContract.View, out P : BaseContract.Pres
         }
     }
 
-    override fun showLoader() {
+    override fun showLoader(text: String) {
+        baseBinding.baseSpinner.loadingMessage.text = text
         baseBinding.baseSpinner.root.show()
     }
 

@@ -38,17 +38,20 @@
             app:expandedTitleMarginEnd="8dp"
             app:expandedTitleMarginStart="18dp"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
-            app:title="@string/app_name">
+            tools:title="@string/app_name">
 
             <TextView
-                android:id="@+id/toolbar_image"
+                android:id="@+id/toolbar_address_text"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="18dp"
+                android:layout_marginEnd="18dp"
                 android:adjustViewBounds="true"
+                android:ellipsize="end"
                 android:gravity="bottom"
-                android:text="Αγία Παρασκευή, Αθήνα, Αττική 13456"
-                android:textColor="@color/white" />
+                android:lines="1"
+                android:textColor="@color/white"
+                tools:text="Αγία Παρασκευή, Αθήνα, Αττική 13456" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"

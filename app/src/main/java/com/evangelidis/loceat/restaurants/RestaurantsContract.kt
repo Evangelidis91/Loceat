@@ -6,22 +6,22 @@ import com.evangelidis.loceat.restaurants.model.Venue
 
 interface RestaurantsContract {
 
-    interface Model{
-        fun loadRestaurants(listener: APIListener)
+    interface Model {
+        fun loadRestaurants(latitude: Double, longitude: Double, listener: APIListener)
     }
 
-    interface View : BaseContract.View{
-        fun setRecyclerView(newsList: MutableList<Venue>)
+    interface View : BaseContract.View {
+        fun setRecyclerView(venuesList: MutableList<Venue>)
         fun displayErrorMessage()
     }
 
-    interface Presenter{
-        fun loadRestaurants()
+    interface Presenter {
+        fun loadRestaurants(latitude: Double, longitude: Double, loadingText: String)
     }
 
     interface APIListener {
-        fun onSuccess(newsList: MutableList<Venue>)
-        fun onError(restaurants: RestaurantsResponse)
+        fun onSuccess(venuesList: MutableList<Venue>)
+        fun onError(venuesList: RestaurantsResponse)
         fun onFailure(t: Throwable?)
     }
 }

@@ -2,8 +2,8 @@ package com.evangelidis.loceat.base
 
 interface BaseContract {
 
-    interface View{
-        fun showLoader()
+    interface View {
+        fun showLoader(text: String)
         fun hideLoader()
     }
 

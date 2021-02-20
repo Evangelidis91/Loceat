@@ -12,15 +12,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Loceat">
-        <activity android:name=".restaurants.RestaurantsListActivity"></activity>
-        <activity android:name=".base.BaseActivity" />
-        <activity android:name=".location.LocationActivity">
+
+        <activity
+            android:name=".location.LocationActivity"
+            android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".restaurants.RestaurantsListActivity"
+            android:screenOrientation="sensorPortrait" />
+
+        <activity
+            android:name=".base.BaseActivity"
+            android:screenOrientation="sensorPortrait" />
 
         <meta-data
             android:name="com.google.android.gms.version"

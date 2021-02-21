@@ -2,25 +2,22 @@ package com.evangelidis.loceat.restaurants
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Gravity
 import android.view.MenuItem
-import androidx.annotation.RequiresApi
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.widget.Toast
 import com.evangelidis.loceat.Constant
+import com.evangelidis.loceat.ItemsManager.getUserAddress
 import com.evangelidis.loceat.R
 import com.evangelidis.loceat.base.BaseActivity
 import com.evangelidis.loceat.databinding.ActivityRestaurantsListBinding
-import com.evangelidis.loceat.restaurants.model.Category
+import com.evangelidis.loceat.extensions.gone
+import com.evangelidis.loceat.restaurants.model.CategoriesViewType.Companion.CATEGORY_SPACE_TYPE
+import com.evangelidis.loceat.restaurants.model.CategoriesViewType.Companion.CATEGORY_TITLE_TYPE
+import com.evangelidis.loceat.restaurants.model.CategoriesViewType.Companion.CATEGORY_VENUE_TYPE
 import com.evangelidis.loceat.restaurants.model.FormattedCategory
 import com.evangelidis.loceat.restaurants.model.Venue
 
 class RestaurantsListActivity : BaseActivity<RestaurantsContract.View, RestaurantsPresenter>(), RestaurantsContract.View, CategoriesAdapterCallback {
-
-    private var userLatitude: Double? = null
-    private var userLongitude: Double? = null
 
     companion object {
 
@@ -40,21 +37,36 @@ class RestaurantsListActivity : BaseActivity<RestaurantsContract.View, Restauran
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        userLatitude = intent.getDoubleExtra(LATITUDE, 1000.0)
-        userLongitude = intent.getDoubleExtra(LONGITUDE, 1000.0)
-
-        if (userLatitude == 1000.0 || userLongitude == 1000.0) {
-            userLatitude = Constant.DEFAULT_LATITUDE
-            userLongitude = Constant.DEFAULT_LONGITUDE
-        }
+        val userLatitude = intent.getDoubleExtra(LATITUDE, Constant.DEFAULT_LATITUDE)
+        val userLongitude = intent.getDoubleExtra(LONGITUDE, Constant.DEFAULT_LONGITUDE)
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        setToolbar(userLatitude, userLongitude)
+
+        presenter.loadRestaurants(latitude = userLatitude, longitude = userLongitude, loadingText = getString(R.string.loading_venues_text))
+    }
+
+    private fun setToolbar(latitude: Double, longitude: Double) {
         binding.collapsingToolbar.setExpandedTitleTextAppearance(R.style.extendedToolbar)
         binding.collapsingToolbar.setCollapsedTitleTextAppearance(R.style.collapsingToolbarLayoutTitleColor)
 
-        presenter.loadRestaurants()
+        val addressesList = getUserAddress(this, latitude, longitude).split(",").toTypedArray()
+        when {
+            addressesList.count() > 1 -> {
+                binding.collapsingToolbar.title = addressesList.first()
+                binding.toolbarAddressText.text = addressesList[1]
+            }
+            addressesList.count() == 1 -> {
+                binding.collapsingToolbar.title = addressesList.first()
+                binding.toolbarAddressText.gone()
+            }
+            else -> {
+                binding.collapsingToolbar.title = getString(R.string.unknown_location_text)
+                binding.toolbarAddressText.gone()
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -66,51 +78,42 @@ class RestaurantsListActivity : BaseActivity<RestaurantsContract.View, Restauran
         }
     }
 
-
-    override fun setRecyclerView(newsList: MutableList<Venue>) {
-//        val f = newsList
-//        val categories: MutableList<Category> = mutableListOf()
-//
-//        for (venue in f) {
-//            for (category in venue.categories) {
-//                if (!categories.contains(category)) {
-//                    categories.add(category)
-//                }
-//            }
-//        }
-//
-//        val y = categories
-//        println(y)
-//
-//        val i = newsList.groupBy { it.categories.first().name }
-//        println(i)
-
-        newsList.sortBy { it.location?.distance }
-        val grouped = newsList.groupBy { it.categories }
-        val listToDeploy: MutableList<FormattedCategory> = mutableListOf()
-        listToDeploy.add(FormattedCategory(type = "Space", venue = null, category = null))
-        for (group in grouped) {
-            listToDeploy.add(FormattedCategory(type = "Title", venue = null, category = group.key.first()))
-            for (venue in group.value) {
-                listToDeploy.add(FormattedCategory(type = "Venue", venue = venue, category = null))
-            }
-            listToDeploy.add(FormattedCategory(type = "Space", venue = null, category = null))
+    override fun setRecyclerView(venuesList: MutableList<Venue>) {
+        if (venuesList.isNullOrEmpty()) {
+            errorToastMessage()
         }
-
+        venuesList.sortBy { it.location.distance }
+        val grouped = venuesList.groupBy { it.categories }
+        val listToDeploy: MutableList<FormattedCategory> = mutableListOf()
+        listToDeploy.add(FormattedCategory(type = CATEGORY_SPACE_TYPE, venue = null, category = null))
+        for (group in grouped) {
+            listToDeploy.add(FormattedCategory(type = CATEGORY_TITLE_TYPE, venue = null, category = group.key.first()))
+            for (venue in group.value) {
+                listToDeploy.add(FormattedCategory(type = CATEGORY_VENUE_TYPE, venue = venue, category = null))
+            }
+            listToDeploy.add(FormattedCategory(type = CATEGORY_SPACE_TYPE, venue = null, category = null))
+        }
         setAdapter(listToDeploy)
     }
 
-    private fun setAdapter(listToDeploy: MutableList<FormattedCategory>){
+    private fun setAdapter(listToDeploy: MutableList<FormattedCategory>) {
         binding.venuesList.adapter = adapter
         adapter.venues = listToDeploy
     }
 
+    override fun displayErrorMessage() {
+        errorToastMessage()
+    }
 
-    override fun displayErrorMessage() {}
+    private fun errorToastMessage() {
+        Toast.makeText(this, getString(R.string.error_message), Toast.LENGTH_LONG).show()
+        finish()
+    }
+
+    override fun navigateToVenue(venueId: String) {
+        Toast.makeText(this, getString(R.string.navigate_to_venue_toast).replace("{ID}", venueId), Toast.LENGTH_SHORT).show()
+    }
 
     override fun createPresenter() = RestaurantsPresenter()
-    override fun performAction(action: String) {
 
-    }
 }
-

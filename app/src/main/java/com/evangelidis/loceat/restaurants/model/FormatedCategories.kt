@@ -1,15 +1,11 @@
 package com.evangelidis.loceat.restaurants.model
 
-import androidx.annotation.Keep
-import kotlinx.android.parcel.IgnoredOnParcel
-
 data class FormattedCategory(
     val type: String,
     val venue: Venue?,
     val category: Category?
 ) : CategoriesViewType {
 
-    @IgnoredOnParcel
     override val viewType: Int = when (type) {
         CategoriesViewType.CATEGORY_TITLE_TYPE -> CategoriesViewType.TITLE
         CategoriesViewType.CATEGORY_VENUE_TYPE -> CategoriesViewType.VENUE
@@ -18,7 +14,6 @@ data class FormattedCategory(
     }
 }
 
-@Keep
 interface CategoriesViewType {
     companion object {
         const val TITLE = 0

@@ -6,17 +6,17 @@ import com.evangelidis.loceat.restaurants.model.Venue
 
 class RestaurantsPresenter : BasePresenter<RestaurantsContract.View>(), RestaurantsContract.Presenter, RestaurantsContract.APIListener {
 
-    override fun loadRestaurants() {
-        view?.showLoader()
-        RestaurantsRepository().loadRestaurants(this)
+    override fun loadRestaurants(latitude: Double, longitude: Double, loadingText: String) {
+        view?.showLoader(loadingText)
+        RestaurantsRepository().loadRestaurants(latitude, longitude, this)
     }
 
-    override fun onSuccess(newsList: MutableList<Venue>) {
-        view?.setRecyclerView(newsList)
+    override fun onSuccess(venuesList: MutableList<Venue>) {
+        view?.setRecyclerView(venuesList)
         view?.hideLoader()
     }
 
-    override fun onError(restaurants: RestaurantsResponse) {
+    override fun onError(venuesList: RestaurantsResponse) {
         view?.displayErrorMessage()
     }
 

@@ -11,11 +11,7 @@ import com.evangelidis.loceat.R
 import com.evangelidis.loceat.base.BaseActivity
 import com.evangelidis.loceat.databinding.ActivityRestaurantsListBinding
 import com.evangelidis.loceat.extensions.gone
-import com.evangelidis.loceat.restaurants.model.CategoriesViewType.Companion.CATEGORY_SPACE_TYPE
-import com.evangelidis.loceat.restaurants.model.CategoriesViewType.Companion.CATEGORY_TITLE_TYPE
-import com.evangelidis.loceat.restaurants.model.CategoriesViewType.Companion.CATEGORY_VENUE_TYPE
 import com.evangelidis.loceat.restaurants.model.FormattedCategory
-import com.evangelidis.loceat.restaurants.model.Venue
 
 class RestaurantsListActivity : BaseActivity<RestaurantsContract.View, RestaurantsPresenter>(), RestaurantsContract.View, CategoriesAdapterCallback {
 
@@ -78,34 +74,12 @@ class RestaurantsListActivity : BaseActivity<RestaurantsContract.View, Restauran
         }
     }
 
-    override fun setRecyclerView(venuesList: MutableList<Venue>) {
-        if (venuesList.isNullOrEmpty()) {
-            errorToastMessage()
-        }
-        venuesList.sortBy { it.location.distance }
-        val grouped = venuesList.groupBy { it.categories }
-        val listToDeploy: MutableList<FormattedCategory> = mutableListOf()
-        listToDeploy.add(FormattedCategory(type = CATEGORY_SPACE_TYPE, venue = null, category = null))
-        for (group in grouped) {
-            listToDeploy.add(FormattedCategory(type = CATEGORY_TITLE_TYPE, venue = null, category = group.key.first()))
-            for (venue in group.value) {
-                listToDeploy.add(FormattedCategory(type = CATEGORY_VENUE_TYPE, venue = venue, category = null))
-            }
-            listToDeploy.add(FormattedCategory(type = CATEGORY_SPACE_TYPE, venue = null, category = null))
-        }
-        setAdapter(listToDeploy)
-    }
-
-    private fun setAdapter(listToDeploy: MutableList<FormattedCategory>) {
+    override fun setRecyclerView(venuesList: MutableList<FormattedCategory>) {
         binding.venuesList.adapter = adapter
-        adapter.venues = listToDeploy
+        adapter.venues = venuesList
     }
 
     override fun displayErrorMessage() {
-        errorToastMessage()
-    }
-
-    private fun errorToastMessage() {
         Toast.makeText(this, getString(R.string.error_message), Toast.LENGTH_LONG).show()
         finish()
     }

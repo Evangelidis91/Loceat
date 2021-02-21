@@ -13,9 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Loceat">
 
-        <activity
-            android:name=".location.LocationActivity"
-            android:screenOrientation="sensorPortrait">
+        <activity android:name=".splashScreen.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,9 +22,13 @@
         </activity>
 
         <activity
-            android:name=".restaurants.RestaurantsListActivity"
+            android:name=".location.LocationActivity"
             android:screenOrientation="sensorPortrait" />
 
+        <activity
+            android:name=".restaurants.RestaurantsListActivity"
+            android:screenOrientation="sensorPortrait" />
+        
         <activity
             android:name=".base.BaseActivity"
             android:screenOrientation="sensorPortrait" />

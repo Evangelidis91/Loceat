@@ -2,6 +2,7 @@ package com.evangelidis.loceat.location
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
@@ -30,6 +31,11 @@ import com.google.android.gms.maps.model.MarkerOptions
 import java.util.*
 
 class LocationActivity : BaseActivity<BaseContract.View, BasePresenter<BaseContract.View>>(), OnMapReadyCallback {
+
+    companion object {
+        fun createIntent(context: Context): Intent =
+            Intent(context, LocationActivity::class.java)
+    }
 
     private lateinit var locationViewModel: LocationViewModel
     private var isGPSEnabled = false

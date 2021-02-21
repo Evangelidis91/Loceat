@@ -8,6 +8,8 @@ import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.location.Address
 import android.location.Geocoder
+import android.net.ConnectivityManager
+import android.util.Log
 import android.widget.ImageView
 import androidx.core.app.ActivityCompat
 import com.bumptech.glide.Glide
@@ -69,5 +71,14 @@ object ItemsManager {
         return BitmapDescriptorFactory.fromBitmap(smallMarker)
     }
 
-
+    fun isConnected(context: Context): Boolean {
+        try {
+            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val networkInfo = connectivityManager.activeNetworkInfo
+            return networkInfo != null && networkInfo.isAvailable && networkInfo.isConnected
+        } catch (e: Exception) {
+            Log.v("connectivity", e.toString())
+        }
+        return false
+    }
 }

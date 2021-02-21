@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -14,6 +15,7 @@ import com.evangelidis.loceat.Constant.DEFAULT_LONGITUDE
 import com.evangelidis.loceat.Constant.GPS_REQUEST
 import com.evangelidis.loceat.Constant.LOCATION_REQUEST
 import com.evangelidis.loceat.ItemsManager.getUserAddress
+import com.evangelidis.loceat.ItemsManager.isConnected
 import com.evangelidis.loceat.ItemsManager.isPermissionsGranted
 import com.evangelidis.loceat.ItemsManager.setMarkerIcon
 import com.evangelidis.loceat.R
@@ -49,15 +51,19 @@ class LocationActivity : BaseActivity<BaseContract.View, BasePresenter<BaseContr
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
 
-        presenter.view?.showLoader(getString(R.string.tracking_location_text))
+        if (isConnected(this)) {
+            presenter.view?.showLoader(getString(R.string.tracking_location_text))
+            locationViewModel = ViewModelProviders.of(this).get(LocationViewModel::class.java)
 
-        locationViewModel = ViewModelProviders.of(this).get(LocationViewModel::class.java)
-
-        GpsUtils(this).turnGPSOn(object : GpsUtils.OnGpsListener {
-            override fun gpsStatus(isGPSEnable: Boolean) {
-                this@LocationActivity.isGPSEnabled = isGPSEnable
-            }
-        })
+            GpsUtils(this).turnGPSOn(object : GpsUtils.OnGpsListener {
+                override fun gpsStatus(isGPSEnable: Boolean) {
+                    this@LocationActivity.isGPSEnabled = isGPSEnable
+                }
+            })
+        } else {
+            Toast.makeText(this, getString(R.string.no_internet_message), Toast.LENGTH_LONG).show()
+            finish()
+        }
     }
 
     override fun onStart() {

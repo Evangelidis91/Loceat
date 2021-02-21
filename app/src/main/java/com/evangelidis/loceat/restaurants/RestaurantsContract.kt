@@ -1,6 +1,7 @@
 package com.evangelidis.loceat.restaurants
 
 import com.evangelidis.loceat.base.BaseContract
+import com.evangelidis.loceat.restaurants.model.FormattedCategory
 import com.evangelidis.loceat.restaurants.model.RestaurantsResponse
 import com.evangelidis.loceat.restaurants.model.Venue
 
@@ -11,7 +12,7 @@ interface RestaurantsContract {
     }
 
     interface View : BaseContract.View {
-        fun setRecyclerView(venuesList: MutableList<Venue>)
+        fun setRecyclerView(venuesList: MutableList<FormattedCategory>)
         fun displayErrorMessage()
     }
 

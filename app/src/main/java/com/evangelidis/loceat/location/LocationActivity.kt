@@ -86,6 +86,7 @@ class LocationActivity : BaseActivity<BaseContract.View, BasePresenter<BaseContr
     }
 
     private fun startLocationUpdate() {
+        presenter.view?.showLoader(getString(R.string.tracking_location_text))
         locationViewModel.getLocationData().observe(this, Observer {
             setLocation(it.latitude, it.longitude)
         })

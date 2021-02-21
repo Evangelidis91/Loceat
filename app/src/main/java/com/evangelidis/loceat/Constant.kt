@@ -5,6 +5,8 @@ object Constant {
     const val BASE_URL = "https://api.foursquare.com/v2/"
     const val BASE_CATEGORY_IMAGE_URL = "https://foursquare.com/img/categories/food/"
 
+    const val SPLASHSCREEN_TIME = 2500L
+
     const val GEOLOCATION_LANGUAGE = "el"
 
     const val CLIENT_ID = "SRPJKINSGQOLS24RLMSGUA31KBLWQIANSHMTT5Q3FWM55KHZ"

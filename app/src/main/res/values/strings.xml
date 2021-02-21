@@ -9,5 +9,6 @@
     <string name="address_text">Διεύθυνση:</string>
     <string name="continue_button_text">Συνέχεια</string>
     <string name="unknown_location_text">Άγνωστη τοποθεσία</string>
+    <string name="no_internet_message">Δεν υπάρχει σύνδεση στο ιντερνέτ. Συνδεθήτε και προσπαθήστε ξανά.</string>
 
 </resources>

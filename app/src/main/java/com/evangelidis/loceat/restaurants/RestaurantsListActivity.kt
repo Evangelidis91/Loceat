@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
 import com.evangelidis.loceat.Constant
+import com.evangelidis.loceat.ItemsManager
 import com.evangelidis.loceat.ItemsManager.getUserAddress
 import com.evangelidis.loceat.R
 import com.evangelidis.loceat.base.BaseActivity
@@ -41,7 +42,12 @@ class RestaurantsListActivity : BaseActivity<RestaurantsContract.View, Restauran
 
         setToolbar(userLatitude, userLongitude)
 
-        presenter.loadRestaurants(latitude = userLatitude, longitude = userLongitude, loadingText = getString(R.string.loading_venues_text))
+        if (ItemsManager.isConnected(this)) {
+            presenter.loadRestaurants(latitude = userLatitude, longitude = userLongitude, loadingText = getString(R.string.loading_venues_text))
+        } else {
+            Toast.makeText(this, getString(R.string.no_internet_message), Toast.LENGTH_LONG).show()
+            finish()
+        }
     }
 
     private fun setToolbar(latitude: Double, longitude: Double) {
